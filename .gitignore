@@ -1,1 +1,11 @@
+# dotenv
+/.env
+
+# webserver
+/config/*
+/data/*
+/logs/*
+/www/**
+
+# Rust
 /target

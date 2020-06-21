@@ -9,10 +9,8 @@ fn main() {
 }
 
 fn handler(io: &mut dyn IO, env: HashMap<String, String>) -> io::Result<i32> {
-
     let request = create_request(io, &env)?;
-    let res_builder = Response::builder()
-        .version(request.version());
+    let res_builder = Response::builder().version(request.version());
 
     io.write_all(
         format!(
@@ -58,5 +56,4 @@ fn create_request(io: &mut dyn IO, env: &HashMap<String, String>) -> io::Result<
     req_builder
         .body(buf)
         .map_err(|err| io::Error::new(io::ErrorKind::InvalidData, err))
-    }
-
+}
