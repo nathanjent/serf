@@ -1,30 +1,46 @@
 version: "3"
 
 services:
-  webserver:
-    image: httpd:2.4
-    container_name: httpd
-    restart: 'always'
+  web:
+    build:
+      context: ./web
+    restart: always
+    depends_on:
+      - db
     ports:
-      - "${HOST_MACHINE_UNSECURE_HOST_PORT}:80"
-      - "${HOST_MACHINE_SECURE_HOST_PORT}:443"
-    links:
-      - database
+      - 80:80
     volumes: 
-      - ${DOCUMENT_ROOT-./www}:/usr/local/apache2/htdocs/
-      - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
-      - ${LOG_DIR-./logs/apache2}:/var/log/apache2
-  database:
-    image: mysql:5.7
-    container_name: 'database'
-    restart: 'always'
-    ports:
-      - "127.0.0.1:${HOST_MACHINE_MYSQL_PORT}:3306"
+      - type: bind
+        source: ./certs/apache-selfsigned.crt
+        target: /usr/local/apache2/conf/server.crt
+      - type: bind
+        source: ./certs/apache-selfsigned.key
+        target: /usr/local/apache2/conf/server.key
+
+  db:
+    image: mysql:5.5
+    restart: always
     volumes: 
-      - ${MYSQL_DATA_DIR-./data/mysql}:/var/lib/mysql
-      - ${MYSQL_LOG_DIR-./logs/mysql}:/var/log/mysql
+      - type: volume
+        source: db_logs
+        target: /var/log/mysql
+      - type: volume
+        source: db_data
+        target: /var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?mysql_root_password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-db}
+      MYSQL_USER: ${MYSQL_USER:-dbuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?mysql_password}
+
+  dbadmin:
+    image: adminer:4
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+
+volumes:
+  db_logs:
+  db_data:

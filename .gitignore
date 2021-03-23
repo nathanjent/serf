@@ -1,11 +1,6 @@
 # dotenv
-/.env
+.env
 
-# webserver
-/config/*
-/data/*
-/logs/*
-/www/**
-
-# Rust
-/target
+# Self signed development certs
+**/*.crt
+**/*.key
