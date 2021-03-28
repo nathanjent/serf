@@ -243,6 +243,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "path-tree"
+version = "0.1.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "284ddd88011a675276be272a00d0d5277ac7859e55bd454d58398aac1e01b8dc"
+
+[[package]]
 name = "rand"
 version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -291,6 +297,7 @@ version = "0.1.0"
 dependencies = [
  "http",
  "outer_cgi",
+ "path-tree",
 ]
 
 [[package]]
