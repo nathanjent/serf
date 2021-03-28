@@ -2,7 +2,7 @@
 
 Serve with CGI using httpd.
 
-Create a certs directory.
+Create development certs for TLS.
 
     cd certs
     ./create_dev_certs.sh
